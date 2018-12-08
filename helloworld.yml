@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Executing ping status
+    ping:
+  - name: update ubuntu packages and install git
+    apt:
+      name: git
+      update_cache: yes
+      state: present
+  - name: installing tree
+    apt:
+      name: tree
+      state: present
+      

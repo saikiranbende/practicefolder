@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: update the package and install apache
+    apt:
+      name: apache2
+      update_cache: yes
+      state: present
+    notify:
+    - restart apache2 in ubuntu OS
+    when: ansible_os_family == "Debian"
+  - name: install apache
+    yum:
+      name: https
+      state: present
+    notify:
+    - restart of apache in RedHat OS
+    when: ansible_os_family == "RedHat"
+  - name: install php and restart
+    apt:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - php 
+      - libapache2-mod-php
+      - php-mcrypt
+      - php-mysql
+    notify:
+    - restart apache2 in ubuntu OS
+    when: ansible_os_family == "Debian"
+  - name: install php and restart in redhat
+    yum:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - php 
+      - php-mysql
+    notify:
+    - restart of apache in RedHat OS
+    when: ansible_os_family == "RedHat"
+  handlers:
+  - name: restart apache2 in ubuntu OS
+    service:
+      name: apache2
+      enabled: yes
+      state: restarted
+    when: ansible_os_family == "Debian"
+  - name: restart of apache in RedHat OS
+    service:
+      name: httpd
+      enabled: yes
+      state: restarted
+    when: ansible_os_family == "RedHat"
