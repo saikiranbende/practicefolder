@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: yes
+  vars:
+    - myname: template examples
+  tasks:
+  - name: static content
+    copy:
+      scr: static.txt
+      dest: /home/ansible/static
+  - name: Dynamic content
+    template:
+      scr: dynamic.j2
+      dest: /home/ansible/dynamic
